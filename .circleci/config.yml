@@ -17,7 +17,7 @@ image_config: &image_config
 
   # # RUBY_VERSION_NUM: # pick a version from https://cache.ruby-lang.org/pub/ruby
 
-  NODE_VERSION_NUM: v13.7.0
+  NODE_VERSION_NUM: 13.7.0
 
   # PYTHON_VERSION_NUM: # pick a version from https://python.org/ftp/python
 
