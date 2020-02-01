@@ -4,7 +4,7 @@ image_config: &image_config
   # either as project-specific environment variables
   # or as resources in your organization's org-global Context
 
-  IMAGE_NAME: Node-Java-Browsers
+  IMAGE_NAME: node-java-browsers
 
   IMAGE_TAG: latest
 
