@@ -35,15 +35,15 @@ version: 2
 jobs:
   build:
     machine: true
-    environment:
-      <<: *image_config
+#     environment:
+#       <<: *image_config
 
     steps:
       - checkout
 
-      - run: bash scripts/generate.sh > Dockerfile
+#       - run: bash scripts/generate.sh > Dockerfile
       
-      - run: cat Dockerfile
+#       - run: cat Dockerfile
 
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
