@@ -6,7 +6,6 @@ Easily build Docker images with different versions/combinations of common langua
 
 - [CircleCI account](https://circleci.com/signup)
 - [Docker Hub account](https://hub.docker.com) (Docker itself **does not** need to be installed on your computer)
-- [Make](https://en.wikipedia.org/wiki/Make_(software)) & [Perl](https://perl.org) (included in most macOS & Linux installations)
 
 ## Usage
 
