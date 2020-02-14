@@ -4,7 +4,7 @@ image_config: &image_config
   # either as project-specific environment variables
   # or as resources in your organization's org-global Context
 
-  IMAGE_NAME: node-java-chrome
+  IMAGE_NAME: node-java
 
   IMAGE_TAG: 1.0
 
