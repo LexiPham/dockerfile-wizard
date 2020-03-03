@@ -38,13 +38,7 @@ RUN pwd
 RUN mkdir -p .android && touch ~/.android/repositories.cfg
 
 #Install Android Tools
-RUN yes | sdkmanager --update --verbose
-RUN yes | sdkmanager "platform-tools" --verbose
-RUN yes | sdkmanager "platforms;android-27" --verbose
-RUN yes | sdkmanager "build-tools;27.0.0" --verbose
-RUN yes | sdkmanager "build-tools;28.0.3" --verbose
-RUN yes | sdkmanager "extras;android;m2repository" --verbose
-RUN yes | sdkmanager "extras;google;m2repository" --verbose
+RUN yes | /opt/android/tools/bin/sdkmanager --install "platform-tools" "system-images;android-*28*;google_apis;x86" "platforms;android-28" "build-tools;28.0.3" "emulator"
 
 # Add platform-tools and emulator to path
 ENV PATH $PATH:$ANDROID_HOME/platform-tools
