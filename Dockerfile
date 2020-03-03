@@ -30,15 +30,24 @@ RUN apt-get update && apt-get install gnupg2 git wget unzip gcc-multilib libglu1
 
 #Install Android
 ENV ANDROID_HOME /opt/android
-RUN wget 'https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip' -P /tmp \
-&& unzip -d /opt/android /tmp/sdk-tools-linux-4333796.zip
+RUN wget -O android-tools.zip https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip --show-progress \
+&& unzip android-tools.zip -d $ANDROID_HOME && rm android-tools.zip
 
 ENV PATH $PATH:$ANDROID_HOME/tools/bin
 RUN mkdir -p ~/.android && touch ~/.android/repositories.cfg
 
 #Install Android Tools
-RUN yes | /opt/android/tools/bin/sdkmanager --install "platform-tools" "system-images;android-*28*;google_apis;x86" "platforms;android-28" "build-tools;28.0.3" "emulator"
-RUN yes | /opt/android/tools/bin/sdkmanager --licenses
+#Install Android Tools
+RUN yes | sdkmanager --update --verbose
+RUN yes | sdkmanager "platform-tools" --verbose
+RUN yes | sdkmanager "platforms;android-27" --verbose
+RUN yes | sdkmanager "build-tools;27.0.0" --verbose
+RUN yes | sdkmanager "build-tools;28.0.3" --verbose
+RUN yes | sdkmanager "extras;android;m2repository" --verbose
+RUN yes | sdkmanager "extras;google;m2repository" --verbose
+
+# RUN yes | /opt/android/tools/bin/sdkmanager --install "platform-tools" "system-images;android-*28*;google_apis;x86" "platforms;android-28" "build-tools;28.0.3" "emulator"
+# RUN yes | /opt/android/tools/bin/sdkmanager --licenses
 
 # Add platform-tools and emulator to path
 ENV PATH $PATH:$ANDROID_HOME/platform-tools
