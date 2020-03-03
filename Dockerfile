@@ -26,7 +26,7 @@ RUN apt-get update -qq && apt-get install -qq --no-install-recommends \
 # RUN apt-get -y install google-chrome-stable
 
 # Install another dependencies
-RUN apt-get install gnupg2 git wget unzip gcc-multilib libglu1 -y
+RUN apt-get update && apt-get install gnupg2 git wget unzip gcc-multilib libglu1 -y
 
 #Install Android
 ENV ANDROID_HOME /opt/android
