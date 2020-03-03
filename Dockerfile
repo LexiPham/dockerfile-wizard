@@ -1,73 +1,27 @@
-FROM openjdk:8-jdk-slim@sha256:c6a0df0ff6377656c2b35617e415e278257c87dc753789b1b5acef6dd77f4049
-LABEL maintainer "Oanh Pham <phamkoko@gmail.com>"
+FROM ubuntu
 
-ARG REFRESHED_AT
-ENV REFRESHED_AT $REFRESHED_AT
+LABEL maintainer "phamkoko@gmail"
 
-# hadolint ignore=DL3009
-RUN apt-get update -qq && apt-get install -qq --no-install-recommends \
-  curl \
-  gnupg2
+WORKDIR /
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+SHELL ["/bin/bash", "-c"]
 
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt-get update -qq && apt-get install -qq --no-install-recommends \
-  nodejs \
-  yarn \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
-  
-# RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add
-# RUN echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
-# RUN apt-get -y update
-# RUN apt-get -y install google-chrome-stable
+RUN apt update && apt install -y openjdk-8-jdk nodejs vim git unzip libglu1 libpulse-dev libasound2 libc6  libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxi6  libxtst6 libnss3 wget
 
-# Install another dependencies
-RUN apt-get update && apt-get install gnupg2 git wget unzip gcc-multilib libglu1 -y
+ARG ANDROID_API_LEVEL=28
+ARG ANDROID_BUILD_TOOLS_LEVEL=28.0.3
+ARG EMULATOR_NAME='test'
 
-#Install Android
-ENV ANDROID_HOME /opt/android
-RUN wget -O android-tools.zip https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip --show-progress \
-&& unzip android-tools.zip -d $ANDROID_HOME && rm android-tools.zip
+RUN wget 'https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip' -P /tmp \
+&& unzip -d /opt/android /tmp/sdk-tools-linux-4333796.zip \
+&& yes Y | /opt/android/tools/bin/sdkmanager --install "platform-tools" "system-images;android-${ANDROID_API_LEVEL};google_apis;x86" "platforms;android-${ANDROID_API_LEVEL}" "build-tools;${ANDROID_BUILD_TOOLS_LEVEL}" "emulator" \
+&& yes Y | /opt/android/tools/bin/sdkmanager --licenses \
+&& echo "no" | /opt/android/tools/bin/avdmanager --verbose create avd --force --name "test" --device "pixel" --package "system-images;android-${ANDROID_API_LEVEL};google_apis;x86" --tag "google_apis" --abi "x86"
 
-ENV PATH $PATH:$ANDROID_HOME/tools/bin
-RUN mkdir -p ~/.android && touch ~/.android/repositories.cfg
+ENV ANDROID_HOME=/opt/android
+ENV PATH "$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
+ENV LD_LIBRARY_PATH "$ANDROID_HOME/emulator/lib64:$ANDROID_HOME/emulator/lib64/qt/lib"
 
-#Install Android Tools
-#Install Android Tools
-RUN yes | sdkmanager --update --verbose
-RUN yes | sdkmanager "platform-tools" --verbose
-RUN yes | sdkmanager "platforms;android-27" --verbose
-RUN yes | sdkmanager "build-tools;27.0.0" --verbose
-RUN yes | sdkmanager "build-tools;28.0.3" --verbose
-RUN yes | sdkmanager "extras;android;m2repository" --verbose
-RUN yes | sdkmanager "extras;google;m2repository" --verbose
+ADD start.sh /
 
-# RUN yes | /opt/android/tools/bin/sdkmanager --install "platform-tools" "system-images;android-*28*;google_apis;x86" "platforms;android-28" "build-tools;28.0.3" "emulator"
-# RUN yes | /opt/android/tools/bin/sdkmanager --licenses
-
-# Add platform-tools and emulator to path
-ENV PATH $PATH:$ANDROID_HOME/platform-tools
-ENV PATH $PATH:$ANDROID_HOME/emulator
-
-#Install latest android emulator system images
-ENV EMULATOR_IMAGE "system-images;android-24;google_apis;x86_64"
-RUN yes | sdkmanager $EMULATOR_IMAGE --verbose
-
-# Copy Qt library files to system folder
-RUN cp -a /opt/android/emulator/lib64/qt/lib/. /usr/lib/x86_64-linux-gnu/
-
-# Creating a emulator with sdcard
-RUN echo "no" | avdmanager -v create avd -n test -k $EMULATOR_IMAGE -c 100M
-
-ADD start_emulator.sh /bin/start_emulator
-RUN chmod +x /bin/start_emulator
-
-ADD wait_emulator_boot.sh /bin/wait_emulator
-RUN chmod +x /bin/wait_emulator
-
-ADD unlock_emulator.sh /bin/unlock_emulator
-RUN chmod +x /bin/unlock_emulator
+RUN chmod +x start.sh
