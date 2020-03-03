@@ -34,6 +34,9 @@ RUN wget -O android-tools.zip https://dl.google.com/android/repository/sdk-tools
 && unzip android-tools.zip -d $ANDROID_HOME && rm android-tools.zip
 ENV PATH $PATH:$ANDROID_HOME/tools/bin
 
+RUN pwd
+RUN mkdir -p .android && touch ~/.android/repositories.cfg
+
 #Install Android Tools
 RUN yes | sdkmanager --update --verbose
 RUN yes | sdkmanager "platform-tools" --verbose
