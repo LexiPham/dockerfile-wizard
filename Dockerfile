@@ -21,7 +21,3 @@ RUN wget 'https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip' 
 ENV ANDROID_HOME=/opt/android
 ENV PATH "$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
 ENV LD_LIBRARY_PATH "$ANDROID_HOME/emulator/lib64:$ANDROID_HOME/emulator/lib64/qt/lib"
-
-ADD start.sh /
-
-RUN chmod +x start.sh
