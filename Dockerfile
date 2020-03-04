@@ -6,7 +6,7 @@ WORKDIR /
 
 SHELL ["/bin/bash", "-c"]
 
-RUN apt update && apt install -y openjdk-8-jdk vim git unzip libglu1 libpulse-dev libasound2 libc6 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxi6  libxtst6 libnss3 wget qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils ia32-libs-multiarch
+RUN apt update && apt install -y openjdk-8-jdk vim git unzip libglu1 libpulse-dev libasound2 libc6 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxi6  libxtst6 libnss3 wget qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils
 
 #=====================
 # Install Android SDK
